@@ -18,7 +18,15 @@
     --foreground: #ededed;
   }
 } */
-
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+}
 body {
     /* background: var(--background);
     color: var(--foreground); */

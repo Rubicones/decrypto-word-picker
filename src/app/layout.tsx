@@ -31,7 +31,7 @@ export default function RootLayout({
                 <link href="https://fonts.cdnfonts.com/css/cyrillic-pixel-7" rel="stylesheet"/>
                 
             </head>
-            <body className={`${architectural.variable} antialiased`}>{children}</body>
+            <body className={`${architectural.variable} antialiased bg-white`}>{children}</body>
         </html>
     );
 }
