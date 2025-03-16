@@ -37,7 +37,7 @@ export default function Home() {
     };
 
     return (
-        <div className='w-full flex flex-col justify-center items-center'>
+        <div className='w-full flex flex-col justify-center items-center bg-white'>
             <div className='w-full text-center bg-[#DF5A4E] flex items-center justify-center border-y-10 border-[#3F5374] shadowedTextBlue'>
                 <span className='text-6xl font-[family-name:var(--font-architectural)] text-white translate-y-1 font-bold '>
                     Decrypto word picker
