@@ -1,103 +1,255 @@
-import Image from "next/image";
+"use client";
+
+import WordCard from "@/components/WordCard";
+import { WORDS } from "@/utils/words";
+import { Eye, EyeClosed } from "lucide-react";
+import { useState } from "react";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    const [state, setState] = useState<
+        "GENERATE BLUE" | "HIDE BLUE" | "GENERATE RED" | "HIDE RED" | "NEW GAME"
+    >("GENERATE BLUE");
+    const usedWords: string[] = [];
+    const [words, setWords] = useState({
+        blue: {
+            1: "",
+            2: "",
+            3: "",
+            4: "",
+            isHidden: false,
+        },
+        red: {
+            1: "",
+            2: "",
+            3: "",
+            4: "",
+            isHidden: false,
+        },
+    });
+    const pickRandomWord = () => {
+        const randomIndex = Math.floor(Math.random() * WORDS.length);
+        const randomWord = WORDS[randomIndex];
+        if (usedWords.includes(randomWord)) {
+            return pickRandomWord();
+        }
+        usedWords.push(randomWord);
+        return randomWord;
+    };
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+    return (
+        <div className='w-full flex flex-col justify-center items-center'>
+            <div className='w-full text-center bg-[#DF5A4E] flex items-center justify-center border-y-10 border-[#3F5374] shadowedTextBlue'>
+                <span className='text-6xl font-[family-name:var(--font-architectural)] text-white translate-y-1 font-bold '>
+                    Decrypto word picker
+                </span>
+            </div>
+
+            <div className='w-full max-w-[1200px] flex items-center flex-col'>
+                <div className='w-full flex gap-2 items-center justify-center mt-10'>
+                    <span className='text-6xl font-[family-name:var(--font-architectural)] text-[#3F5374] translate-y-1 font-bold '>
+                        Blue Team
+                    </span>
+                    <button
+                        className='cursor-pointer'
+                        disabled={words.blue["1"] === ""}
+                        onClick={() => {
+                            setWords({
+                                ...words,
+                                blue: {
+                                    ...words.blue,
+                                    isHidden: !words.blue.isHidden,
+                                },
+                            });
+                        }}
+                    >
+                        {words.blue.isHidden ? (
+                            <EyeClosed size='64' className='text-[#3F5374]' />
+                        ) : (
+                            <Eye size='64' className='text-[#3F5374]' />
+                        )}
+                    </button>
+                </div>
+                <div className='w-full flex flex-row carouselContainer overflow-x-scroll no-scrollbar overflow-y-hidden'>
+                    <WordCard
+                        cardNo={1}
+                        word={words.blue["1"]}
+                        isHidden={words.blue.isHidden}
+                    />
+                    <WordCard
+                        cardNo={2}
+                        word={words.blue["2"]}
+                        isHidden={words.blue.isHidden}
+                    />
+                    <WordCard
+                        cardNo={3}
+                        word={words.blue["3"]}
+                        isHidden={words.blue.isHidden}
+                    />
+                    <WordCard
+                        cardNo={4}
+                        word={words.blue["4"]}
+                        isHidden={words.blue.isHidden}
+                    />
+                </div>
+
+                <div className='my-6 w-full text-center text-3xl font-semibold flex flex-col item-center gap-2 px-2'>
+                    <span>
+                        {state.includes("GENERATE") && (
+                            <>
+                                Pass the phone to the{" "}
+                                <span
+                                    className={`${
+                                        state === "GENERATE BLUE"
+                                            ? "text-[#3F5374]"
+                                            : "text-[#DF5A4E]"
+                                    }`}
+                                >
+                                    {state === "GENERATE BLUE"
+                                        ? " blue"
+                                        : " red"}
+                                </span>{" "}
+                                team
+                            </>
+                        )}
+                        {state.includes("HIDE") && (
+                            <>
+                                Write down the words and press the button below
+                            </>
+                        )}
+                        {state.includes("NEW GAME") && (
+                            <>Press the button below to generate new words</>
+                        )}
+                    </span>
+                    <button
+                        className='bg-[#DF5A4E] w-fit self-center  px-4 rounded-md border-6 border-[#3F5374] cursor-pointer'
+                        onClick={() => {
+                            if (state === "GENERATE BLUE") {
+                                setWords({
+                                    ...words,
+                                    blue: {
+                                        1: pickRandomWord(),
+                                        2: pickRandomWord(),
+                                        3: pickRandomWord(),
+                                        4: pickRandomWord(),
+                                        isHidden: false,
+                                    },
+                                });
+
+                                setState("HIDE BLUE");
+                                return;
+                            }
+                            if (state === "GENERATE RED") {
+                                setWords({
+                                    ...words,
+                                    red: {
+                                        1: pickRandomWord(),
+                                        2: pickRandomWord(),
+                                        3: pickRandomWord(),
+                                        4: pickRandomWord(),
+                                        isHidden: false,
+                                    },
+                                });
+
+                                setState("HIDE RED");
+                                return;
+                            }
+                            if (state === "HIDE BLUE") {
+                                setState("GENERATE RED");
+
+                                setWords({
+                                    blue: {
+                                        ...words.blue,
+                                        isHidden: true,
+                                    },
+                                    red: {
+                                        ...words.red,
+                                        isHidden: false,
+                                    },
+                                });
+                                return;
+                            }
+                            if (state === "HIDE RED") {
+                                setState("NEW GAME");
+                                words.red.isHidden = true;
+                                return;
+                            }
+                            if (state === "NEW GAME") {
+                                setState("GENERATE BLUE");
+                                setWords({
+                                    blue: {
+                                        1: "",
+                                        2: "",
+                                        3: "",
+                                        4: "",
+                                        isHidden: false,
+                                    },
+                                    red: {
+                                        1: "",
+                                        2: "",
+                                        3: "",
+                                        4: "",
+                                        isHidden: false,
+                                    },
+                                });
+                                return;
+                            }
+                        }}
+                    >
+                        <span className='shadowedTextBlue text-6xl font-[family-name:var(--font-architectural)] text-white mt-2 block font-bold '>
+                            {state.includes("GENERATE") && "GENERATE"}
+                            {state.includes("HIDE") && "HIDE"}
+                            {state === "NEW GAME" && "NEW GAME"}
+                        </span>
+                    </button>
+                </div>
+
+                <div className='w-full flex flex-row carouselContainer overflow-x-scroll no-scrollbar'>
+                    <WordCard
+                        cardNo={1}
+                        word={words.red["1"]}
+                        isHidden={words.red.isHidden}
+                    />
+                    <WordCard
+                        cardNo={2}
+                        word={words.red["2"]}
+                        isHidden={words.red.isHidden}
+                    />
+                    <WordCard
+                        cardNo={3}
+                        word={words.red["3"]}
+                        isHidden={words.red.isHidden}
+                    />
+                    <WordCard
+                        cardNo={4}
+                        word={words.red["4"]}
+                        isHidden={words.red.isHidden}
+                    />
+                </div>
+                <div className='w-full flex gap-2 items-center justify-center mt-2'>
+                    <span className='text-6xl font-[family-name:var(--font-architectural)] text-[#DF5A4E] translate-y-1 font-bold '>
+                        Red team
+                    </span>
+                    <button
+                        className='cursor-pointer'
+                        disabled={words.red["1"] === ""}
+                        onClick={() => {
+                            setWords({
+                                ...words,
+                                red: {
+                                    ...words.red,
+                                    isHidden: !words.red.isHidden,
+                                },
+                            });
+                        }}
+                    >
+                        {words.red.isHidden ? (
+                            <EyeClosed size='64' className='text-[#DF5A4E]' />
+                        ) : (
+                            <Eye size='64' className='text-[#DF5A4E]' />
+                        )}
+                    </button>
+                </div>
+            </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
-  );
+    );
 }
