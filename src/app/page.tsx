@@ -1,7 +1,7 @@
 "use client";
 
 import WordCard from "@/components/WordCard";
-import { WORDS } from "@/utils/words";
+import { WORDS_EN, WORDS_RU } from "@/utils/words";
 import { Eye, EyeClosed } from "lucide-react";
 import { useState } from "react";
 
@@ -10,6 +10,7 @@ export default function Home() {
         "GENERATE BLUE" | "HIDE BLUE" | "GENERATE RED" | "HIDE RED" | "NEW GAME"
     >("GENERATE BLUE");
     const usedWords: string[] = [];
+    const [lang, setLang] = useState<"EN" | "RU">("RU");
     const [words, setWords] = useState({
         blue: {
             1: "",
@@ -27,6 +28,7 @@ export default function Home() {
         },
     });
     const pickRandomWord = () => {
+        const WORDS = lang === "EN" ? WORDS_EN : WORDS_RU;
         const randomIndex = Math.floor(Math.random() * WORDS.length);
         const randomWord = WORDS[randomIndex];
         if (usedWords.includes(randomWord)) {
@@ -42,6 +44,37 @@ export default function Home() {
                 <span className='text-6xl font-[family-name:var(--font-architectural)] text-white translate-y-1 font-bold '>
                     Decrypto word picker
                 </span>
+            </div>
+
+            <div className="w-full flex justify-center gap-2 mt-6">
+                <button
+                    className={`${
+                        lang === "EN"
+                            ? "bg-[#DF5A4E] text-[#3F5374]"
+                            : "bg-[#3F5374] text-[#DF5A4E]"
+                    } w-fit self-center  px-4 rounded-md border-6 border-[#3F5374] cursor-pointer`}
+                    onClick={() => {
+                        setLang("EN");
+                    }}
+                >
+                    <span className={`shadowedTextBlue text-6xl font-[family-name:var(--font-architectural)] ${lang === "EN" ? 'text-white' : 'text-neutral-300'} mt-2 block font-bold `}>
+                    EN
+                    </span>
+                </button>
+                <button
+                    className={`${
+                        lang === "RU"
+                            ? "bg-[#DF5A4E] text-[#3F5374]"
+                            : "bg-[#3F5374] text-[#DF5A4E]"
+                    } w-fit self-center  px-4 rounded-md border-6 border-[#3F5374] cursor-pointer`}
+                    onClick={() => {
+                        setLang("RU");
+                    }}
+                >
+                    <span className={`shadowedTextBlue text-6xl font-[family-name:var(--font-architectural)] ${lang === "RU" ? 'text-white' : 'text-neutral-300'} mt-2 block font-bold `}>
+                        RU
+                    </span>
+                </button> 
             </div>
 
             <div className='w-full max-w-[1200px] flex items-center flex-col'>
@@ -112,9 +145,7 @@ export default function Home() {
                             </>
                         )}
                         {state.includes("HIDE") && (
-                            <>
-                                Write down the words and press the button below
-                            </>
+                            <>Write down the words and press the button below</>
                         )}
                         {state.includes("NEW GAME") && (
                             <>Press the button below to generate new words</>

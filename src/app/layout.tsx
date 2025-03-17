@@ -10,6 +10,9 @@ const architectural = localFont({
 });
 
 
+
+
+
 export const metadata: Metadata = {
     title: "Decrypto Word Picker",
     description:
